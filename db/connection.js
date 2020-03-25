@@ -1,33 +1,19 @@
 const mysql = require('mysql');
 const util = require('util');
 
-class Connection {
+const connection = mysql.createConnection({
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "root",
+    database: "company_db"
+});
 
-    constructor(db) {
-        
-        this.connection = mysql.createConnection({
-            host: "localhost",
-            port: 3306,
-            user: "root",
-            password: "root",
-            database: db
-        });
+connection.query = util.promisify(connection.query);
+connection.connect() = function(err) {
+    if (err) throw new Error("Could not connect to database");
 
-        this.queryAsync = util.promisify(this.connection.query).bind(connection);
-    }
-
-    connect() {
-        this.connection.createConnection(function() {
-            if (err) throw err;
-
-            console.log("Connected as id " + this.connection.threadId + "\n");
-        });
-    }
-
-    disconnect() {
-        this.connection.end();
-        console.log("Connection closed...\n");
-    }
+    console.log("Connected to database at id " + connection.threadId + "\n");
 }
 
-module.exports = new Connection;
+module.exports = connection;
