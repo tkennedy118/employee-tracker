@@ -29,6 +29,10 @@ const choices = [
     {
         name: "Update Employee Role",
         value: "update_employee_role"
+    },
+    {
+        name: "Exit",
+        value: "exit"
     }
 ];
 
@@ -57,30 +61,64 @@ const main = async function() {
             console.table(data);
             break;
         case "add_department":
+            await addDepartment();
+            break;
         case "add_role":
+            await addRole();
+            break;
         case "add_employee":
         case "update_employee_role":
+        case "exit":
+        default:
+            Company.disconnect();
+            return;
     }
 
+    main();
+}
 
-    // // code for updating employee role
-    // try {
-    //     let data = await Company.updateEmployeeRole(20, 3);
+const addDepartment = async function() {
 
-    // } catch(err) {
-    //     console.log(err);
-    // }
+    try {
+        const { name } = await prompt({
+            type: "input",
+            name: "name",
+            message: "What is the name of the department you are adding?"
+        });
+    
+        Company.addDepartment(name);
 
-    // // code for displaying department
-    // try {
-    //     let data = await Company.viewTable("employee");
-    //     console.table(data);
-        
-    // } catch (err) {
-    //     console.log(err);
-    // }
+    } catch(err) {
+        console.log(err);
+    }
+}
 
-    // Company.disconnect();
+const addRole = async function() {
+
+    try {
+        const { title, salary, department } = await prompt([
+            {
+                type: "input",
+                name: "title",
+                message: "What is the name of the role?"
+            },
+            {
+                type: "number",
+                name: "salary",
+                message: "What is the salary for this role?"
+            },
+            {
+                type: "number",
+                name: "department",
+                message: "What is the id of the role's department?"
+            }
+        ]);
+    
+        Company.addRole(title, salary, department);
+
+    } catch(err) {
+        console.log(err);
+    }
 }
 
 
