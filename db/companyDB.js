@@ -6,11 +6,19 @@ class CompanyDB {
         this.connection = connection;
     }
 
-    async viewTable(table) {
+    async getTable(table) {
         const query = `SELECT * FROM ${table}`;
         const result = await this.connection.query(query);
 
         if (!result) throw new Error("Could not retrieve table information.");
+        return result;
+    }
+
+    async getDeptWithIdOnly() {
+        const query = `SELECT name, department_id FROM department`;
+        const result = await this.connection.query(query);
+
+        if (!result) throw new Error("Could not retrieve departments");
         return result;
     }
 

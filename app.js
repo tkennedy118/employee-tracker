@@ -41,6 +41,7 @@ const choices = [
 const main = async function() {
 
     await displayHome();
+    console.log("\n");
     
     let { choice } = await prompt({
         type: "list",
@@ -52,15 +53,15 @@ const main = async function() {
     let data;
     switch (choice) {
         case "view_departments":
-            data = await Company.viewTable("department");
+            data = await Company.getTable("department");
             console.table(data);
             break;
         case "view_roles":
-            data = await Company.viewTable("role");
+            data = await Company.getTable("role");
             console.table(data);
             break;
         case "view_employees":
-            data = await Company.viewTable("employee");
+            data = await Company.getTable("employee");
             console.table(data);
             break;
         case "add_department":
@@ -86,6 +87,7 @@ const main = async function() {
 
 const displayHome = async function() {
 
+    
     figlet("Content Management System", (err, data) => {
         if (err) {
             console.log("Something went wrong...");
@@ -175,17 +177,25 @@ const addEmployee = async function() {
 
 const updateEmployeeRole = async function() {
 
+    const choices = await Company.getDeptWithIdOnly();
+
+    choices.forEach(choice => {
+        choice.value = choice.department_id;
+        delete choice.department_id;
+    });
+
     try {
         const { empId, roleId } = await prompt([
             {
                 type: "number",
                 name: "empId",
-                Message: "What is the id of the employee?"
+                message: "What is the id of the employee?"
             },
             {
-                type: "number",
+                type: "list",
                 name: "roleId",
-                Message: "What is the id of the employee's new role?"
+                Message: "What is the employee's new role?",
+                choices: choices
             }
         ]);
 
