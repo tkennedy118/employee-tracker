@@ -116,6 +116,8 @@ const addDepartment = async function() {
 
 const addRole = async function() {
 
+    const deptChoices = await Company.getDeptNameAndValue();
+
     try {
         const { title, salary, department } = await prompt([
             {
@@ -129,9 +131,10 @@ const addRole = async function() {
                 message: "What is the salary for this role?"
             },
             {
-                type: "number",
+                type: "list",
                 name: "department",
-                message: "What is the id of the role's department?"
+                message: "What is the role's department?",
+                choices: deptChoices
             }
         ]);
     
@@ -143,6 +146,9 @@ const addRole = async function() {
 }
 
 const addEmployee = async function() {
+
+    const roleChoices = await Company.getRoleNameAndValue();
+    const manChoices = await Company.getEmpNameAndValue();
 
     try {
         const { fname, lname, roleId, mgrId } = await prompt([
@@ -157,14 +163,16 @@ const addEmployee = async function() {
                 message: "What is the employee's last name?"
             },
             {
-                type: "number",
+                type: "list",
                 name: "roleId",
-                message: "What is the id of the employee's role?"
+                message: "What is the employee's role?",
+                choices: roleChoices
             },
             {
-                type: "number",
+                type: "list",
                 name: "mgrId",
-                message: "What is the id of the employee's manager?"
+                message: "Who is the employee's manager?",
+                choices: manChoices
             }
         ]);
 
@@ -177,25 +185,23 @@ const addEmployee = async function() {
 
 const updateEmployeeRole = async function() {
 
-    const choices = await Company.getDeptWithIdOnly();
 
-    choices.forEach(choice => {
-        choice.value = choice.department_id;
-        delete choice.department_id;
-    });
+    const nameChoices = await Company.getEmpNameAndValue();
+    const idChoices = await Company.getDeptNameAndValue();
 
     try {
         const { empId, roleId } = await prompt([
             {
-                type: "number",
+                type: "list",
                 name: "empId",
-                message: "What is the id of the employee?"
+                message: "What is the employee's name?",
+                choices: nameChoices
             },
             {
                 type: "list",
                 name: "roleId",
                 Message: "What is the employee's new role?",
-                choices: choices
+                choices: idChoices
             }
         ]);
 

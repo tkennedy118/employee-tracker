@@ -14,11 +14,27 @@ class CompanyDB {
         return result;
     }
 
-    async getDeptWithIdOnly() {
-        const query = `SELECT name, department_id FROM department`;
+    async getDeptNameAndValue() {
+        const query = `SELECT name, department_id AS value FROM department`;
         const result = await this.connection.query(query);
 
-        if (!result) throw new Error("Could not retrieve departments");
+        if (!result) throw new Error("Could not retrieve departments.");
+        return result;
+    }
+
+    async getRoleNameAndValue() {
+        const query = `SELECT CONCAT(r.title, " of ", d.name) AS name, r.role_id AS value FROM role AS r INNER JOIN department AS d ON r.department_id = d.department_id`;
+        const result = await this.connection.query(query);
+
+        if (!result) throw new Error("Could not retrieve roles.");
+        return result;
+    }
+
+    async getEmpNameAndValue() {
+        const query = `SELECT CONCAT (first_name, " ", last_name) AS name, employee_id AS value FROM employee`;
+        const result = await this.connection.query(query);
+
+        if (!result) throw new Error("Could not retrieve employees.");
         return result;
     }
 
