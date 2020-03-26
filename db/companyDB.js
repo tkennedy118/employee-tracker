@@ -34,7 +34,15 @@ class CompanyDB {
         const query = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${first_name}', '${last_name}', ${role_id}, ${manager_id})`;
         const result = await this.connection.query(query);
 
-        if(!result) throw new Error("Could not add employee.");
+        if (!result) throw new Error("Could not add employee.");
+        return result;
+    }
+
+    async updateEmployeeRole(emp_id, role_id) {
+        const query = `UPDATE employee SET role_id = ${role_id} WHERE employee_id = ${emp_id}`;
+        const result = await this.connection.query(query);
+
+        if (!result) throw new Error("Could not update employee role.");
         return result;
     }
 
