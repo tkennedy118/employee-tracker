@@ -1,4 +1,5 @@
 const Company = require('./db/companyDB');
+const figlet = require('figlet');
 const { prompt } = require('inquirer');
 
 const choices = [
@@ -36,17 +37,19 @@ const choices = [
     }
 ];
 
+
 const main = async function() {
 
-    let data;
-
+    await displayHome();
+    
     let { choice } = await prompt({
         type: "list",
         name: "choice",
         message: "What would you like to do?",
         choices: choices
     });
-
+    
+    let data;
     switch (choice) {
         case "view_departments":
             data = await Company.viewTable("department");
@@ -67,7 +70,11 @@ const main = async function() {
             await addRole();
             break;
         case "add_employee":
+            await addEmployee();
+            break;
         case "update_employee_role":
+            await updateEmployeeRole();
+            break;
         case "exit":
         default:
             Company.disconnect();
@@ -75,6 +82,18 @@ const main = async function() {
     }
 
     main();
+}
+
+const displayHome = async function() {
+
+    figlet("Content Management System", (err, data) => {
+        if (err) {
+            console.log("Something went wrong...");
+            return;
+        }
+        
+        console.log(data);
+    });
 }
 
 const addDepartment = async function() {
@@ -88,7 +107,7 @@ const addDepartment = async function() {
     
         Company.addDepartment(name);
 
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 }
@@ -116,10 +135,65 @@ const addRole = async function() {
     
         Company.addRole(title, salary, department);
 
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 }
 
+const addEmployee = async function() {
+
+    try {
+        const { fname, lname, roleId, mgrId } = await prompt([
+            {
+                type: "input",
+                name: "fname",
+                message: "What is the employee's first name?"
+            },
+            {
+                type: "input",
+                name: "lname",
+                message: "What is the employee's last name?"
+            },
+            {
+                type: "number",
+                name: "roleId",
+                message: "What is the id of the employee's role?"
+            },
+            {
+                type: "number",
+                name: "mgrId",
+                message: "What is the id of the employee's manager?"
+            }
+        ]);
+
+        Company.addEmployee(fname, lname, roleId, mgrId);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+const updateEmployeeRole = async function() {
+
+    try {
+        const { empId, roleId } = await prompt([
+            {
+                type: "number",
+                name: "empId",
+                Message: "What is the id of the employee?"
+            },
+            {
+                type: "number",
+                name: "roleId",
+                Message: "What is the id of the employee's new role?"
+            }
+        ]);
+
+        Company.updateEmployeeRole(empId, roleId);
+
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 main();
