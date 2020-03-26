@@ -9,11 +9,11 @@ const connection = mysql.createConnection({
     database: "company_db"
 });
 
-connection.query = util.promisify(connection.query);
-connection.connect() = function(err) {
+connection.connect(err => {
     if (err) throw new Error("Could not connect to database");
-
     console.log("Connected to database at id " + connection.threadId + "\n");
-}
+}) 
+
+connection.query = util.promisify(connection.query);
 
 module.exports = connection;
