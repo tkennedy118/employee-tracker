@@ -34,12 +34,33 @@ const choices = [
 
 const main = async function() {
 
+    let data;
+
     let { choice } = await prompt({
         type: "list",
         name: "choice",
         message: "What would you like to do?",
         choices: choices
     });
+
+    switch (choice) {
+        case "view_departments":
+            data = await Company.viewTable("department");
+            console.table(data);
+            break;
+        case "view_roles":
+            data = await Company.viewTable("role");
+            console.table(data);
+            break;
+        case "view_employees":
+            data = await Company.viewTable("employee");
+            console.table(data);
+            break;
+        case "add_department":
+        case "add_role":
+        case "add_employee":
+        case "update_employee_role":
+    }
 
 
     // // code for updating employee role
@@ -61,5 +82,6 @@ const main = async function() {
 
     // Company.disconnect();
 }
+
 
 main();
