@@ -18,7 +18,7 @@ class CompanyDB {
         const query = `INSERT INTO department (name) VALUES ('${name}')`;
         const result = await this.connection.query(query);
 
-        if (!result) throw new Error("Could not add department.");
+        if (!result) throw new Error("Could not add department."); 
         return result;
     }
 
