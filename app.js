@@ -4,6 +4,10 @@ const { prompt } = require('inquirer');
 
 const choices = [
     {
+        name: "View All",
+        value: "view_all"
+    },
+    {
         name: "View All Departments",
         value: "view_departments"
     },
@@ -37,10 +41,22 @@ const choices = [
     }
 ];
 
+const displayHome = async function() {
+
+    figlet("Content Management System", (err, data) => {
+        if (err) {
+            console.log("Something went wrong...");
+            return;
+        }
+        
+        console.log(data);
+        main();
+    });
+}
+
 
 const main = async function() {
 
-    await displayHome();
     console.log("\n");
     
     let { choice } = await prompt({
@@ -52,6 +68,10 @@ const main = async function() {
     
     let data;
     switch (choice) {
+        case "view_all":
+            data = await Company.getAll();
+            console.table(data);
+            break;
         case "view_departments":
             data = await Company.getTable("department");
             console.table(data);
@@ -83,19 +103,6 @@ const main = async function() {
     }
 
     main();
-}
-
-const displayHome = async function() {
-
-    
-    figlet("Content Management System", (err, data) => {
-        if (err) {
-            console.log("Something went wrong...");
-            return;
-        }
-        
-        console.log(data);
-    });
 }
 
 const addDepartment = async function() {
@@ -212,4 +219,4 @@ const updateEmployeeRole = async function() {
     }
 }
 
-main();
+displayHome();

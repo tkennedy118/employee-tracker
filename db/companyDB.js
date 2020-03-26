@@ -6,6 +6,16 @@ class CompanyDB {
         this.connection = connection;
     }
 
+    async getAll() {
+        const query = `SELECT e.first_name, e.last_name, e.employee_id, r.title AS role, d.name AS department FROM employee as e 
+                       RIGHT JOIN role AS r ON e.role_id = r.role_id RIGHT JOIN department AS d ON r.department_id = d.department_id
+                       ORDER BY e.employee_id`;
+        const result = await this.connection.query(query);
+
+        if (!result) throw new Error("Could not retrieve all data.");
+        return result;
+    }
+
     async getTable(table) {
         const query = `SELECT * FROM ${table}`;
         const result = await this.connection.query(query);
@@ -23,7 +33,8 @@ class CompanyDB {
     }
 
     async getRoleNameAndValue() {
-        const query = `SELECT CONCAT(r.title, " of ", d.name) AS name, r.role_id AS value FROM role AS r INNER JOIN department AS d ON r.department_id = d.department_id`;
+        const query = `SELECT CONCAT(r.title, " of ", d.name) AS name, r.role_id AS value FROM role AS r 
+                       INNER JOIN department AS d ON r.department_id = d.department_id`;
         const result = await this.connection.query(query);
 
         if (!result) throw new Error("Could not retrieve roles.");
